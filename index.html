@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Weather App</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background: #0d1117;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #e6edf3;
+    }
+
+    .card {
+        background: rgba(255,255,255,0.05);
+        padding: 30px;
+        border-radius: 15px;
+        width: 350px;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    h2 {
+        margin-bottom: 15px;
+        font-size: 24px;
+        color: #58a6ff;
+    }
+
+    input {
+        width: 90%;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 8px;
+        border: none;
+        outline: none;
+        margin-bottom: 15px;
+        text-align: center;
+        background: #161b22;
+        color: #e6edf3;
+        border: 1px solid #30363d;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border: none;
+        background: #238636;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #2ea043;
+    }
+
+    .result {
+        margin-top: 20px;
+        font-size: 18px;
+        min-height: 50px;
+    }
+
+    .icon {
+        width: 80px;
+        margin-top: 10px;
+    }
+</style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Weather Checker</h2>
+
+    <input id="city" type="text" placeholder="Enter city name">
+    <button onclick="getWeather()">Check Weather</button>
+
+    <div class="result" id="output"></div>
+</div>
+
+<script>
+async function getWeather(){
+    const city=document.getElementById("city").value
+    const output=document.getElementById("output")
+    output.innerHTML="Loading..."
+
+    try{
+        const res=await fetch("http://localhost:3000/weather",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({city})
+        })
+
+        const data=await res.json()
+
+        if(data.error){
+            output.innerHTML="City not found."
+            return
+        }
+
+        const icon = data.weather.toLowerCase().includes("cloud")
+            ? "03d"
+            : data.weather.toLowerCase().includes("rain")
+            ? "09d"
+            : "01d"
+
+        output.innerHTML = `
+            <img class="icon" src="https://openweathermap.org/img/wn/${icon}@2x.png">
+            <br>
+            Temperature: <b>${data.temp}°C</b><br>
+            Weather: <b>${data.weather}</b>
+        `
+    }
+    catch(err){
+        output.innerHTML="Cannot connect to server."
+    }
+}
+</script>
+
+</body>
+</html>
