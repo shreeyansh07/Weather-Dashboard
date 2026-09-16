@@ -1,4 +1,4 @@
-🌤️ Server-Side Weather Application
+🌤️ Server-Side Weather Application 
 
 A simple server-side weather application built using Node.js and Express that fetches real-time weather data from the OpenWeatherMap API and serves it through a RESTful API endpoint. A lightweight frontend consumes this API and displays the results to the user.
 
